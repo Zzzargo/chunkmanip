@@ -34,6 +34,10 @@ char*** chunk_fill(
     char*** chunk, int width, int height, int depth,
     int x, int y, int z, char block);
 
+int*** int_chunk_fill(
+    int*** chunk, int width, int height, int depth,
+    int x, int y, int z, int block);
+
 // Partea C
 
 char*** chunk_rotate_y(

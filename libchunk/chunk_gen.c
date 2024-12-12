@@ -49,6 +49,8 @@ char*** chunk_fill_sphere(
             for (int j = (int)trunc(y - radius); j <= (int)trunc(y + radius); j++) {
                 for (int k = (int)trunc(z - radius); k <= (int)trunc(z + radius); k++) {
                     if (sqrt(pow((i - x), 2) + pow((j - y), 2) + pow((k - z), 2)) <= radius) {
+                         /* Simple geometry. If the distance between the block and the circle center is
+                         bigger than the circle radius, the block is not modified.*/
                         chunk_place_block(chunk, width, height, depth, i, j, k, block);
                     }
                 }
