@@ -1,6 +1,5 @@
 #include "chunk.h"
 #include <stdbool.h>
-#include <stdlib.h>
 
 char*** chunk_shell(
     char*** chunk, int width, int height, int depth,
