@@ -44,8 +44,7 @@ int main(void)
 {
     int width = 0, height = 0, depth = 0;
     char ***chunk = read_chunk(&width, &height, &depth);
-    int new_height;
-    char ***new_chunk = chunk_apply_gravity(chunk, width, height, depth, &new_height);
-    print_chunk(new_chunk, width, new_height, depth);
+    int length = 0;
+    char *output = chunk_encode(chunk, width, height, depth, &length);
     return 0;
 }
