@@ -54,3 +54,4 @@ dkms.conf
 # Custom files
 backup.txt
 test
+.vscode

@@ -144,28 +144,58 @@ char*** chunk_decode(
                 chunk[x][y] = malloc(depth * sizeof ***chunk);
             }
         }
+        int next_block_x = 0;
+        int next_block_y = 0;
+        int next_block_z = 0;
+        x = 0;
+        y = 0;
+        z = 0;
+        bool next = false;
 
         for (i = 0; code[i]; i++) {
-            unsigned char byte_type = code[i] & (char)SEPARATOR_FOR_FIRST_BYTE_OF_TWO_BYTES_RUN;
+            unsigned char byte_type = code[i] & (unsigned char)SEPARATOR_FOR_FIRST_BYTE_OF_TWO_BYTES_RUN;
             unsigned char byte_block_type = code[i] >> BLOCK_TYPE_SHIFT;
             if (byte_type) {
                 // The byte is the first of a two-byte run
                 // We will read two bytes
                 unsigned char byte1 = code[i];
                 unsigned char byte2 = code[i + 1];
-                int run_length = ((int)(byte1 | TWO_BYTES_RUN_FIRST_BYTE_LENGTH_GETTER) <<
+                int run_length = ((int)(byte1 & TWO_BYTES_RUN_FIRST_BYTE_LENGTH_GETTER) <<
                 FIRST_BYTE_OF_TWO_BYTES_SHIFT) | (int)(byte2);
+                // printf("run_length = %d\n", run_length);
+                // printf("byte_block_type = %d\n", byte_block_type);
                 int blocks_placed = 0;
                 bool stop = false;
-                for (y = 0; y < height && !stop; y++) {
-                    for (z = 0; z < depth && !stop; z++) {
-                        for (x = 0; x < width && !stop; x++) {
+                for (y = next_block_y; y < height && !stop; y++,  z = 0) {
+                    if (next) {
+                        z = next_block_z;
+                    }
+                    for (; z < depth && !stop; z++, x = 0) {
+                        if (next) {
+                            x = next_block_x;
+                        }
+                        for (; x < width && !stop; x++) {
+                            next_block_x = x;
+                            next_block_z = z;
+                            next_block_y = y;
                             if (blocks_placed == run_length) {
+                                // Run over
+                                // Setting the first block for the next run
+                                next =  true;
                                 stop = true;
                                 break;
                             }
                             chunk[x][y][z] = (char)byte_block_type;
                             blocks_placed++;
+                            next = false;
+                            if (x == width - 1) {
+                                next_block_x = 0;
+                                next_block_z = z + 1;
+                            }
+                            if (z == depth - 1 && x == width - 1) {
+                                next_block_z = 0;
+                                next_block_y = y + 1;
+                            }
                         }
                     }
                 }
@@ -173,22 +203,47 @@ char*** chunk_decode(
             } else {
                 // We will read one byte
                 int run_length = code[i] & MAX_NUM_ON_5BITS;
+                // printf("run_length = %d\n", run_length);
+                // printf("byte_block_type = %d\n", byte_block_type);
                 int blocks_placed = 0;
                 bool stop = false;
-                for (y = 0; y < height && !stop; y++) {
-                    for (z = 0; z < depth && !stop; z++) {
-                        for (x = 0; x < width && !stop; x++) {
+                for (y = next_block_y; y < height && !stop; y++,  z = 0) {
+                    if (next) {
+                        z = next_block_z;
+                    }
+                    for (; z < depth && !stop; z++, x = 0) {
+                        if (next) {
+                            x = next_block_x;
+                        }
+                        for (; x < width && !stop; x++) {
+                            next_block_x = x;
+                            next_block_z = z;
+                            next_block_y = y;
                             if (blocks_placed == run_length) {
+                                // Run over
+                                // Setting the first block for the next run
+                                next =  true;
                                 stop = true;
                                 break;
                             }
                             chunk[x][y][z] = (char)byte_block_type;
                             blocks_placed++;
+                            next = false;
+                            if (x == width - 1) {
+                                next_block_x = 0;
+                                next_block_z = z + 1;
+                            }
+                            if (z == depth - 1 && x == width - 1) {
+                                next_block_z = 0;
+                                next_block_y = y + 1;
+                            }
                         }
                     }
                 }
             }
         }
         return chunk;
+        // 68 197 8 65 9
+        // 198 161 245 69
     }
 

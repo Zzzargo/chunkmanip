@@ -42,9 +42,11 @@ char ***read_chunk(int *width, int *height, int *depth)
 
 int main(void)
 {
-    int width = 0, height = 0, depth = 0;
-    char ***chunk = read_chunk(&width, &height, &depth);
-    int length = 0;
-    char *output = chunk_encode(chunk, width, height, depth, &length);
+    int width = 8, height = 8, depth = 8;
+    unsigned char *code = calloc(4, sizeof(char));
+    for (int i = 0; i < 4; i++) {
+        scanf("%hhd", &code[i]);
+    }
+    char ***output = chunk_decode(code, width, height, depth);
     return 0;
 }
