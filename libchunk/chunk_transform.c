@@ -17,6 +17,14 @@ char*** chunk_rotate_y(
                 }
             }
         }
+        // Freeing the old chunk
+        for (int x = 0; x < width; x++) {
+            for (int y = height - 1; y >= 0; y--) {
+                free(chunk[x][y]);
+            }
+            free(chunk[x]);
+        }
+        free(chunk);
         return rotated_chunk;
 }
 
@@ -238,6 +246,6 @@ char*** chunk_apply_gravity(
         }
         free(objects);
         free(objects_blocks_dict);
-
+        free(interdependent_objects_dict);
         return chunk;
     }

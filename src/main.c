@@ -42,11 +42,25 @@ char ***read_chunk(int *width, int *height, int *depth)
 
 int main(void)
 {
-    int width = 8, height = 8, depth = 8;
-    unsigned char *code = calloc(4, sizeof(char));
-    for (int i = 0; i < 4; i++) {
-        scanf("%hhd", &code[i]);
+    // Test case 2 binary data
+    unsigned char test2[] = {0x44, 0xC5, 0x08, 0x41, 0x09};
+    
+    // Test case 3 binary data
+    unsigned char test3[] = {0xC6, 0xA1, 0xF5, 0x45};
+    
+    // Choose which test to run
+    unsigned char* test_data = test2;  // or test3
+
+    int width = 16, height = 16, depth = 20;
+    char*** result = chunk_decode(test_data, width, height, depth);
+    
+    // Free the result
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            free(result[i][j]);
+        }
+        free(result[i]);
     }
-    char ***output = chunk_decode(code, width, height, depth);
+    free(result);
     return 0;
 }

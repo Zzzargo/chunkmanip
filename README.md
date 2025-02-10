@@ -24,7 +24,7 @@
 ### Fill in xOz
  - A *flood fill* type algorithm
  - If there is a block of type B at position (x,y,z), the function places `block` at all positions in the plane parallel to xOz that can be reached by moving one block at a time, parallel to the Ox and Oz axes, starting from position (x,y,z) and only passing through blocks of type B.
-### Fill in xOz
+### Fill in space
 - The same concept, but this time it fills in 3D
 ### Rotate around the Oy axis
 - Returns the chunk rotated 90 degrees around the y-axis (or in the xOz plane). Viewed from above, the rotation is counterclockwise. The dimensions of the chunk returned by the function are: `new_width = depth`, `new_height = height`, and `new_depth = width`.

@@ -1,5 +1,8 @@
 #include "chunk.h"
 #include <stdbool.h>
+#define NEIGHBOURS_COUNT_2D 4
+#define NEIGHBOURS_COUNT_3D 6
+#define NEIGHBOURS_SHELL 18
 
 char*** chunk_shell(
     char*** chunk, int width, int height, int depth,
@@ -15,7 +18,7 @@ char*** chunk_shell(
             for (int j = 0; j < height; j++) {
                 for (int k = 0; k < depth; k++) {
                     if (chunk[i][j][k] == target_block) {
-                        for (int iter = 0; iter < sizeof(posx) / sizeof(int); iter++) {
+                        for (int iter = 0; iter < NEIGHBOURS_SHELL; iter++) {
                             // Additional bound checking cuz I get segfault -_-
                             if (i + posx[iter] >= 0 && i + posx[iter] < width && j + posy[iter] >= 0 &&
                             j + posy[iter] < height && k + posz[iter] >= 0 && k + posz[iter] < depth) {
@@ -100,7 +103,7 @@ char*** chunk_fill_xz(
             chunk[current_x][y][current_z] = block;
 
             // Checking neighbours
-            for (int i = 0; i < sizeof(posx); i++) {
+            for (int i = 0; i < NEIGHBOURS_COUNT_2D; i++) {
                 int new_point_x = current_x + posx[i];
                 int new_point_z = current_z + posz[i];
 
@@ -186,7 +189,7 @@ char*** chunk_fill(
             chunk[current_x][current_y][current_z] = block;
 
             // Checking neighbours
-            for (int i = 0; i < sizeof(posx); i++) {
+            for (int i = 0; i < NEIGHBOURS_COUNT_3D; i++) {
                 int new_point_x = current_x + posx[i];
                 int new_point_y = current_y + posy[i];
                 int new_point_z = current_z + posz[i];
@@ -255,7 +258,7 @@ int*** int_chunk_fill(
             chunk[current_x][current_y][current_z] = block;
 
             // Checking neighbours
-            for (int i = 0; i < sizeof(posx); i++) {
+            for (int i = 0; i < NEIGHBOURS_COUNT_3D; i++) {
                 int new_point_x = current_x + posx[i];
                 int new_point_y = current_y + posy[i];
                 int new_point_z = current_z + posz[i];
